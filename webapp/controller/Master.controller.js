@@ -1,12 +1,12 @@
 sap.ui.define([
-	'sap/m/MessageBox',
-	'sap/m/Dialog',	
-	'sap/m/Button',
-	'sap/m/ButtonType',
-    'sap/m/MessageToast',
-    'sap/m/Text',    
-	"be/joriside/ImeiPoC/controller/BaseController"	
-], function(MessageBox, Dialog, Button, ButtonType, MessageToast, Text, BaseController) {
+	"sap/m/MessageBox",
+	"sap/m/Dialog",	
+	"sap/m/Button",
+	"sap/m/ButtonType",
+    "sap/m/MessageToast",
+    "sap/m/Text",    
+	"be/joriside/ImeiPoC/controller/BaseController",
+], (MessageBox, Dialog, Button, ButtonType, MessageToast, Text, BaseController) => {
 	"use strict";
 
 	return BaseController.extend("be.joriside.ImeiPoC.controller.Master", {
@@ -31,17 +31,27 @@ sap.ui.define([
 		
 		_fnHasReadPermission: function() {
 			let that = this;
-			window.plugins.sim.hasReadPermission((oResult) => that._fnSuccessCallbackHasReadPermission(oResult), (oError) => that._fnErrorCallbackHasReadPermission(oError));
+			try {
+				window.plugins.sim.hasReadPermission((oResult) => that._fnSuccessCallbackHasReadPermission(oResult), (oError) => that._fnErrorCallbackHasReadPermission(oError));
+			} 
+			catch (oError) {
+				MessageBox.error(oError.message);
+			}
 		},
 
 		_fnSuccessCallbackHasReadPermission: function(oResult) {
 			console.log("HasReadPermission SuccessCallback " + oResult);
 			let that = this;
-			if (oResult === true) {
-				window.plugins.sim.getSimInfo((oResult1) => that._fnSuccessCallback(oResult1), (oError1) => that._fnErrorCallback(oError1));
+			try {
+				if (oResult === true) {
+					window.plugins.sim.getSimInfo((oResult1) => that._fnSuccessCallback(oResult1), (oError1) => that._fnErrorCallback(oError1));
+				}
+				else {
+					that._fnRequestReadPermission();
+				}
 			}
-			else {
-				that._fnRequestReadPermission();
+			catch (oError) {
+				MessageBox.error(oError.message);
 			}
 
 		},
@@ -52,14 +62,24 @@ sap.ui.define([
 		
 		_fnRequestReadPermission: function() {
 			let that = this;
-			window.plugins.sim.requestReadPermission((oResult) => that._fnSuccessCallbackRequestReadPermission(oResult), (oError) => that._fnErrorCallbackRequestReadPermission(oError));
+			try {
+				window.plugins.sim.requestReadPermission((oResult) => that._fnSuccessCallbackRequestReadPermission(oResult), (oError) => that._fnErrorCallbackRequestReadPermission(oError));
+			}
+			catch (oError) {
+				MessageBox.error(oError.message);
+			}
 		},
 		
 		_fnSuccessCallbackRequestReadPermission: function(oResult) {
 			console.log("RequestReadPermission SuccessCallback " + oResult);
 			//oResult === "OK"
 			let that = this;
-			window.plugins.sim.getSimInfo((oResult1) => that._fnSuccessCallback(oResult1), (oError1) => that._fnErrorCallback(oError1));
+			try {
+				window.plugins.sim.getSimInfo((oResult1) => that._fnSuccessCallback(oResult1), (oError1) => that._fnErrorCallback(oError1));
+			}
+			catch (oError) {
+				MessageBox.error(oError.message)
+			}
 		},
 		
 		_fnErrorCallbackRequestReadPermission: function(oError) {
