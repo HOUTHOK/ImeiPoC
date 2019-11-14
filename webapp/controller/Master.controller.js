@@ -32,7 +32,7 @@ sap.ui.define([
 		_fnHasReadPermission: function() {
 			let that = this;
 			try {
-				window.plugins.sim.hasReadPermission((oResult) => that._fnSuccessCallbackHasReadPermission(oResult), (oError) => that._fnErrorCallbackHasReadPermission(oError));
+				window.plugins.sim.hasReadPermission((oResult) => that._fnSuccessCallbackHasReadPermission(oResult));
 			} 
 			catch (oError) {
 				MessageBox.error(oError.message);
@@ -44,7 +44,7 @@ sap.ui.define([
 			let that = this;
 			try {
 				if (oResult === true) {
-					window.plugins.sim.getSimInfo((oResult1) => that._fnSuccessCallback(oResult1), (oError1) => that._fnErrorCallback(oError1));
+					window.plugins.sim.getSimInfo((oSimInfo) => that._fnSuccessCallback(oSimInfo));
 				}
 				else {
 					that._fnRequestReadPermission();
@@ -75,10 +75,10 @@ sap.ui.define([
 			//oResult === "OK"
 			let that = this;
 			try {
-				window.plugins.sim.getSimInfo((oResult1) => that._fnSuccessCallback(oResult1), (oError1) => that._fnErrorCallback(oError1));
+				window.plugins.sim.getSimInfo((oSimInfo) => that._fnSuccessCallback(oSimInfo));
 			}
 			catch (oError) {
-				MessageBox.error(oError.message)
+				MessageBox.error(oError.message);
 			}
 		},
 		
