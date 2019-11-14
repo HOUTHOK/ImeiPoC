@@ -7,7 +7,7 @@
  */
 var fiori_client_appConfig = {
 	"appName": "ImeiPoC",
-	"appVersion": "2.3",
+	"appVersion": "2.9",
 	"appID": "com.sap.webide.x2052dbca0ecd4f5bba58aa7beaa1c4bb",
 	"fioriURL": "https://mobile-a58656b54.hana.ondemand.com:443",
 	"auth": [

@@ -6,7 +6,7 @@ sap.ui.define([
     'sap/m/MessageToast',
     'sap/m/Text',    
 	"be/joriside/ImeiPoC/controller/BaseController"	
-], (MessageBox, Dialog, Button, ButtonType, MessageToast, Text, BaseController) => {
+], function(MessageBox, Dialog, Button, ButtonType, MessageToast, Text, BaseController) {
 	"use strict";
 
 	return BaseController.extend("be.joriside.ImeiPoC.controller.Master", {
@@ -31,14 +31,14 @@ sap.ui.define([
 		
 		_fnHasReadPermission: function() {
 			let that = this;
-			window.plugins.sim.hasReadPermission(that._fnSuccessCallbackHasReadPermission, that._fnErrorCallbackHasReadPermission);
+			window.plugins.sim.hasReadPermission((oResult) => that._fnSuccessCallbackHasReadPermission(oResult), (oError) => that._fnErrorCallbackHasReadPermission(oError));
 		},
 
 		_fnSuccessCallbackHasReadPermission: function(oResult) {
 			console.log("HasReadPermission SuccessCallback " + oResult);
 			let that = this;
 			if (oResult === true) {
-				window.plugins.sim.getSimInfo(that._fnSuccessCallback, that._fnErrorCallback);
+				window.plugins.sim.getSimInfo((oResult1) => that._fnSuccessCallback(oResult1), (oError1) => that._fnErrorCallback(oError1));
 			}
 			else {
 				that._fnRequestReadPermission();
@@ -52,30 +52,35 @@ sap.ui.define([
 		
 		_fnRequestReadPermission: function() {
 			let that = this;
-			window.plugins.sim.requestReadPermission(that._fnSuccessCallbackRequestReadPermission, that._fnErrorCallbackRequestReadPermission);
+			window.plugins.sim.requestReadPermission((oResult) => that._fnSuccessCallbackRequestReadPermission(oResult), (oError) => that._fnErrorCallbackRequestReadPermission(oError));
 		},
 		
 		_fnSuccessCallbackRequestReadPermission: function(oResult) {
 			console.log("RequestReadPermission SuccessCallback " + oResult);
+			//oResult === "OK"
 			let that = this;
-			if (oResult === "OK") {
-				window.plugins.sim.getSimInfo(that._fnSuccessCallback, that._fnErrorCallback);
-			}
-			if (oResult === "Permission denied") {
-                var dialog = new Dialog({
-                    title: 'Warning',
-                    type: 'Message',
-                    content: new Text({ text: 'The app needs read-permissions in order to work correctly' }),
+			window.plugins.sim.getSimInfo((oResult1) => that._fnSuccessCallback(oResult1), (oError1) => that._fnErrorCallback(oError1));
+		},
+		
+		_fnErrorCallbackRequestReadPermission: function(oError) {
+			console.log("RequestReadPermission ErrorCallback " + oError);
+			//oError === "Permission denied"
+			let that = this;
+
+            var dialog = new Dialog({
+                    title: "Warning",
+                    type: "Message",
+                    content: new Text({ text: "The app needs read-permissions in order to work correctly" }),
                     beginButton: new Button({
                         type: ButtonType.Emphasized,
-                        text: 'Request permission again',
+                        text: "Request permission again",
                         press: function () {
                             dialog.close();
                             that.fnGetSimInfo();
                         }
                     }),
                     endButton: new Button({
-                        text: 'Cancel',
+                        text: "Cancel",
                         press: function () {
                             dialog.close();
                         }
@@ -85,16 +90,13 @@ sap.ui.define([
                     }
                 });
     
-                dialog.open();				
-			}
-		},
-		
-		_fnErrorCallbackRequestReadPermission: function(oError) {
-			console.log("RequestReadPermission ErrorCallback " + oError);
+            dialog.open();
+
 		},
 
 		_fnSuccessCallback: function(oResult) {
 			console.log(oResult);
+			console.log("deviceId: " + oResult.deviceId);
 			MessageBox.information("Information", {
 				title: "Information",
 				details: oResult,
@@ -105,7 +107,7 @@ sap.ui.define([
 		
 		_fnErrorCallback: function(oError) {
 			console.log(oError);
-		},
+		}
 
 	});
 

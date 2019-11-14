@@ -3,7 +3,7 @@
 <!-- Change the App Name, App Version, App Description and Min OS Versions in the 
      build wizard UI rather than manually modifying their values here. -->
 <!-- Do not change the widget "id" value here. -->
-<widget xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" id="com.sap.webide.x2052dbca0ecd4f5bba58aa7beaa1c4bb" version="2.3">
+<widget xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" id="com.sap.webide.x2052dbca0ecd4f5bba58aa7beaa1c4bb" version="2.9">
 <name xmlns="http://www.w3.org/ns/widgets">ImeiPoC</name>
     <description xmlns="http://www.w3.org/ns/widgets"/>
     <author xmlns="http://www.w3.org/ns/widgets" href="http://cordova.io">SAP hybrid mobile solution</author>
